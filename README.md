@@ -7,6 +7,10 @@
 - Alexander Montes
 
 ## Vision Statement
+<b>Overview</b>
+<br>
+There are lots of tools/websites that allow users to see particular stats of their favorite athletes. Allowing users to track their own statistics in their own hobbies (like snappa) can allow the same feeling as their favorite athlete; aiming to compare themselves to the pinnacle of the sport. Of course, a simple stat tracker could be found on any website but nothing can dynamically include different rules that vary from college to college, compare your stats for any dice game, against any player around the world! This project aims to be an open-source dice-oriented version of DigitalScout, Teamsnap, and even Wooter’s own personal football stat tracking tool.
+
 <b>Problem Statement</b>
 <br>
 Throughout college campuses around the globe, “Die“ is a popular game played by close friends and family that stimulates fast reflexes and fine motor skills. The problem found between both casual and competitive Die players is there is no real application that can guide their games while feasibly tracking and documenting their performance as they play games. There also does not exist an application that creates a fantasy league based on Die to compete with your friends as well. To best serve this growing problem, we will be developing a web application that will be used for all things Die such as a guide on how to play, ease of use user-inputted statistic-tracking, personalized statistics for each user, a league creation so that your friends can join a structured competition and a fantasy Die portion as well.
