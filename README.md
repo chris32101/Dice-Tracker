@@ -6,9 +6,7 @@
 - Maxwell Tang
 - Alexander Montes
 
-## Vision Statement
-<b>Overview</b>
-<br>
+## Overview    
 There are lots of tools/websites that allow users to see particular stats of their favorite athletes. Allowing users to track their own statistics in their own hobbies (like snappa) can allow the same feeling as their favorite athlete; aiming to compare themselves to the pinnacle of the sport. Of course, a simple stat tracker could be found on any website but nothing can dynamically include different rules that vary from college to college, compare your stats for any dice game, against any player around the world! This project aims to be an open-source dice-oriented version of DigitalScout, Teamsnap, and even Wooter’s own personal football stat tracking tool.
 
 <b>Problem Statement</b>
