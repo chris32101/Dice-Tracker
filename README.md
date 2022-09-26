@@ -21,4 +21,12 @@ Our new and interactive web application will contain user-friendly features that
 N/A
 
 ## Developmental Setup
-TO BE DONE/DECIDED NEXT MEETING
+### Frontend
+1. Install the latest version of [Node.js](https://nodejs.org/en/)
+2. Confirm the installation of Node.js by running `node -v` in a terminal of your choice (ie: command prompt)
+3. Confirm the installation of **npm** by running `npm -v` in a terminal of your choice (ie: command prompt)
+4. You should *theoretically* be on the latest version of `npm`, but you could run the following line `npm install -g npm` (optional)
+5. `cd` to `/frontend/`
+6. Run `npm install` to install all packages found in `package.json`.
+7. Finally, run `npm run dev`
+8. You should see something similar to [this](https://prnt.sc/1vmlcou), visit the local link on your preferred browser
