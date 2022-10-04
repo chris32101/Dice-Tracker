@@ -27,6 +27,123 @@ const routes = [
       disableRouteIfLoggedIn: false,
     },
   },
+  {
+    path: "/auth/sign-up",
+    name: "Sign Up",
+    component: SignUp,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: true,
+    },
+  },
+  {
+    path: "/auth/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: true,
+    },
+  },
+  {
+    path: "/dashboard/home",
+    name: "Dashboard_Home",
+    component: Dashboard_Home,
+    meta: {
+      requiresAuth: true,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/home",
+    name: "Dashboard_League_Create_Join",
+    component: League_Home,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/create",
+    name: "Dashboard_League_Create",
+    component: League_Create,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/join",
+    name: "Dashboard_League_Join",
+    component: League_Join,
+    meta: {
+      requiresAuth: true,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/:leagueName/preview",
+    name: "Dashboard_League_Preview",
+    component: League_Preview,
+    meta: {
+      requiresAuth: true,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/:id/createTeams",
+    name: "LeagueOwnerPreview",
+    component: League_CreateTeams,
+    meta: {
+      requiresAuth: true,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/:id/bracket",
+    name: "Dashboard_League_Bracket",
+    component: League_Bracket,
+    meta: {
+      requiresAuth: true,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/:id/leaderboard",
+    name: "Dashboard_League_Leaderboard",
+    component: League_Leaderboard,
+    meta: {
+      requiresAuth: true,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/league/:id/bracket/:teamID/statTracker",
+    name: "Dashboard_League_Bracket_StatTracker",
+    component: League_StatTracker,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "/dashboard/profile/:username",
+    name: "Dashboard_Profile",
+    component: Profile,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: false,
+    },
+  },
+  {
+    path: "*",
+    name: "404 Error",
+    component: PageNotFound,
+    meta: {
+      requiresAuth: false,
+      disableRouteIfLoggedIn: false,
+    },
+  }
 ];
 
 const router = new VueRouter({
