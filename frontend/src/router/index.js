@@ -152,4 +152,27 @@ const router = new VueRouter({
   routes,
 });
 
+// routing works (dependent on auth or not)
+router.beforeEach((to, from, next) => {
+  // user trying to access requires auth page
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // if user isn't logged in and user is trying to access an authorized only page, send to login
+    if (localStorage["token"] == "NONE" || localStorage["loggedIn"] == false) {
+      window.location.href = "/auth/login";
+    } else {
+      // user is logged in, send to page!
+      next();
+    }
+  // user trying to access a page that requires a user to not be logged in
+  } else if (to.matched.some(record => record.meta.disableRouteIfLoggedIn)) {
+    if (localStorage["token"] !== "NONE" || localStorage["loggedIn"] == true) {
+      window.location.href = "/dashboard/home";
+    } else {
+      next();
+    }
+  } else {
+    next()
+  }
+})
+
 export default router;
