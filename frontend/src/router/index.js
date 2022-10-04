@@ -19,16 +19,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    // location
     path: "/",
-    // what we want to call it
     name: "Home",
-    // component that is utilized
     component: Home,
     meta: {
-      // do you need to be logged in to the website
       requiresAuth: false,
-      // prevent user from accessing webpage is logged in
       disableRouteIfLoggedIn: false,
     },
   },
