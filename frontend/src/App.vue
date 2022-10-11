@@ -35,6 +35,13 @@
   </v-app>
 </template>
 
+<style>
+/* https://stackoverflow.com/questions/45598884/change-default-font-in-vuetify */
+#app {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+</style>
+
 <script>
 import store from '../src/store/index'
 import * as type from '../src/store/mutationTypes/types'
