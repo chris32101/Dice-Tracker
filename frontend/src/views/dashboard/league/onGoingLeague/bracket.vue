@@ -81,178 +81,181 @@ export default {
       refereeLink: this.directLink(),
     };
   },
-  
+  methods: {
+    directLink() {
+      return `http://localhost:8080/dashboard/league/${localStorage.getItem(
+        "leagueName"
+      )}/bracket/${localStorage.getItem("matchData")}/statTracker`;
+    },
+    generateLinks() {
+      // var linkArray = []
+      var allMatches = this.getAllMatches();
+      return allMatches.length;
+    },
+    // refresh links
+    refreshPage() {
+      location.reload();
+      return undefined;
+    },
+    // check if current user is owner
+    getIsOwner() {
+      return (
+        localStorage.getItem("username") ===
+        localStorage.getItem("leagueOwnerUsername")
+      );
+    },
+    // return challonge data
+    getChallongeURL() {
+      var challongeURL =
+        "http://challonge.com/" +
+        localStorage.getItem("challongeURL") +
+        "/module";
+      return challongeURL;
+    },
+    // return league name and store to localstorage
+    getLeagueName() {
+      return localStorage.getItem("leagueName");
+    },
+    getTeamList() {
+      return localStorage.getItem("teamlist");
+    },
+    // array of all teams associated to league
+    teamArray() {
+      return JSON.parse(localStorage.getItem("allTeamsFromleague"));
+    },
+    // return all matches if owner
+    getAllMatches() {
+      var matchData = [];
+      var matchIDs = [];
+      var specialID = localStorage.getItem("challongeURL");
+      axios
+        .get(
+          `https://calm-retreat-42630.herokuapp.com/https://nishi7409:1WVHeSGXHOaYXWyNfysXl1NduV4tsNDmgcrfY6hU@api.challonge.com/v1/tournaments/${specialID}/matches.json`,
+          {
+            params: {
+              api_key: "1WVHeSGXHOaYXWyNfysXl1NduV4tsNDmgcrfY6hU",
+              state: "all",
+            },
+          }
+        )
+        .then(function (response) {
+          for (var x = 0; x < response.data.length; x++) {
+            matchData.push({
+              id: response.data[x].match.id,
+              player1: response.data[x].match.player1_id,
+              player2: response.data[x].match.player2_id,
+              state: response.data[x].match.state,
+              winner: response.data[x].match.winner_id,
+              loser: response.data[x].match.loser_id,
+              finishedAt: response.data[x].match.completed_at,
+            });
+            localStorage.setItem("team1ID", response.data[x].match.player1_id);
+            localStorage.setItem("team2ID", response.data[x].match.player2_id);
+            matchIDs.push(response.data[x].match.id);
+          }
+          localStorage.setItem("matchData", matchIDs);
+          return matchData;
+        });
+      return matchData;
+    },
+    // get all teams associated to the league
+    getAllTeams() {
+      // POST request to /allLeagueUsers/
+      axios
+        .post(
+          "http://127.0.0.1:8000/allLeagueUsers/",
+          {
+            leagueName: localStorage.getItem("leagueName"),
+          },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then(function (response) {
+          // if fail, notify user and redirect
+          if (response.data.response == false) {
+            Vue.notify({
+              position: "top center",
+              group: "server",
+              text: response.data.error,
+              type: "error",
+            });
+            window.location.href = "http://localhost:8080/dashboard/home";
+            return undefined;
+          } else {
+            // successful response
+            // redirect owner/user depeending on specific information
+            if (
+              response.data.startedStatus == 1 &&
+              localStorage.getItem("team") !== response.data.leagueOwner
+            )
+              window.location.href = `http://localhost:8080/dashboard/league/${localStorage.getItem(
+                "leagueName"
+              )}/bracket`;
+            if (
+              response.data.startedStatus == 1 &&
+              localStorage.getItem("team") !== response.data.leagueOwner
+            )
+              Vue.notify({
+                position: "top center",
+                group: "server",
+                text: "Retrieving new data...",
+                type: "info",
+              });
+            localStorage.setItem(
+              "LeagueTeams",
+              JSON.stringify(response.data.error)
+            );
+            // *server* notification to refresh
+            window.setTimeout(function () {
+              Vue.notify({
+                position: "top center",
+                group: "server",
+                text: "Refreshing page for possible server and client changes...",
+                type: "success",
+              });
+            }, 5000);
+            window.setTimeout(function () {
+              window.location.reload();
+            }, 7000);
+          }
+        });
+    },
+  },
+  beforeMount() {
+    // Post request to recieve league information
+    axios
+      .post(
+        "http://127.0.0.1:8000/allLeagueTeams/",
+        {
+          leagueName: localStorage.getItem("leagueName"),
+        },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then(function (response) {
+        if (response.data.response == false) {
+          console.log("help");
+        } else {
+          // localStorage.setItem("leagueTeams", JSON.stringify(response.data.error))
+          localStorage.setItem(
+            "teamlist",
+            JSON.stringify(response.data.leagueTeams)
+          );
+          localStorage.setItem("challongeID", response.data.challongeID);
+          localStorage.setItem("challongeURL", response.data.challongeURL);
+          localStorage.setItem(
+            "leagueOwnerUsername",
+            response.data.leagueOwnerUsername
+          );
+        }
+      });
+    this.teamLength = JSON.parse(localStorage.getItem("teamLength"));
+    // Create the teams map
+    for (var x = 0; x < JSON.parse(localStorage.getItem("teamLength")); x++) {
+      this.teamMap.set(x, ["Team " + x, "", ""]);
+    }
+    this.getAllMatches();
+  },
 };
-//Round of 8
-const rounds = [
-  {
-    games: [
-      {
-        player1: { id: "1", name: "Competitor 1", winner: false },
-        player2: { id: "8", name: "Competitor 4", winner: true },
-      },
-      {
-        player1: { id: "4", name: "Competitor 4", winner: false },
-        player2: { id: "5", name: "Competitor 5", winner: true },
-      },
-      {
-        player1: { id: "2", name: "Competitor 2", winner: false },
-        player2: { id: "7", name: "Competitor 7", winner: true },
-      },
-      {
-        player1: { id: "3", name: "Competitor 3", winner: false },
-        player2: { id: "6", name: "Competitor 6", winner: true },
-      },
-    ],
-  },
-  {
-    //Semifinals
-    games: [
-      {
-        player1: { id: "8", name: "Competitor 4", winner: false },
-        player2: { id: "5", name: "Competitor 5", winner: true },
-      },
-      {
-        player1: { id: "6", name: "Competitor 6", winner: false },
-        player2: { id: "7", name: "Competitor 7", winner: true },
-      },
-    ],
-  },
-  //Finals
-  {
-    games: [
-      {
-        player1: { id: "5", name: "Competitor 5", winner: false },
-        player2: { id: "7", name: "Competitor 7", winner: true },
-      },
-    ],
-  },
-];
-const headers = [
-    {
-      text: "Team Name",
-      align: "start",
-      sortable: false,
-      value: "name",
-    },
-    { text: "Shots: #", value: "shots" },
-    { text: "Table Hits: #", value: "table_hits" },
-    { text: "Points: #", value: "points" },
-    { text: "Clinks: #", value: "clinks" },
-    { text: "Dunks: #", value: "dunks" },
-    { text: "P. Points: #", value: "p_points" },
-    { text: "Catches: #", value: "catches" },
-    { text: "Drops: #", value: "drops" },
-    { text: "Table Hit %: #", value: "table_hit_p" },
-    { text: "PP %: #", value: "p_point_p" },
-  ],
-  // dummy data
-  teams = [
-    {
-      name: "Team 1",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 2",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 3",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 4",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 5",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 6",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 7",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-    {
-      name: "Team 8",
-      shots: 159,
-      table_hits: 145,
-      points: 24,
-      clinks: 8,
-      dunks: 3,
-      p_points: 120,
-      catches: 106,
-      drops: 33,
-      table_hit_p: 91,
-      p_point_p: 75,
-    },
-  ];
+
 </script>
 
 <style scoped>
