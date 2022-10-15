@@ -151,7 +151,7 @@ export default {
                 api_key: "1WVHeSGXHOaYXWyNfysXl1NduV4tsNDmgcrfY6hU",
                 tournament: {
                     name: `${leagueName}`,
-                    description: "All Things Snappa league",
+                    description: "Dice Tracker league",
                     open_signup: false,
                     hide_forum: true,
                 },
@@ -192,7 +192,7 @@ export default {
             for (var i = 0; i < bulkTeamNames.length; i++) {
                 participantList.push({"name" : bulkTeamNames[i], "misc": "optional field"})
             }
-            // make call to api (snappa api) that saves data to league
+            // make call to api (Dice Tracker api) that saves data to league
             setTimeout(function() {
                 axios.post(`http://127.0.0.1:8000/saveChallongeData`, {
                     leagueName: localStorage.getItem("leagueName"),
