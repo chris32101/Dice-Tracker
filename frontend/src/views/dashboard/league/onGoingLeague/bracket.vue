@@ -435,20 +435,7 @@ video {
   position: fixed;
   left: 0;
 }
-.headerSnappa {
-  color: black;
-  text-align: center;
-  position: absolute;
-  left: 60%;
-  top: 25%;
-  transform: translate(-50%, 0%);
-  font-size: 8vh;
-}
 
-.bracketcard {
-  left: 0%;
-  color: white;
-}
 .bracketframe {
   border-radius: 20px;
   border-width: 20px;
