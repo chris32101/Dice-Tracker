@@ -50,7 +50,7 @@ const routes = [
     name: "Dashboard_Home",
     component: Dashboard_Home,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
   },
@@ -77,7 +77,7 @@ const routes = [
     name: "Dashboard_League_Join",
     component: League_Join,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
   },
@@ -86,7 +86,7 @@ const routes = [
     name: "Dashboard_League_Preview",
     component: League_Preview,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
   },
@@ -95,7 +95,7 @@ const routes = [
     name: "LeagueOwnerPreview",
     component: League_CreateTeams,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
   },
@@ -104,7 +104,7 @@ const routes = [
     name: "Dashboard_League_Bracket",
     component: League_Bracket,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
   },
@@ -113,7 +113,7 @@ const routes = [
     name: "Dashboard_League_Leaderboard",
     component: League_Leaderboard,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
   },
@@ -143,7 +143,7 @@ const routes = [
       requiresAuth: false,
       disableRouteIfLoggedIn: false,
     },
-  }
+  },
 ];
 
 const router = new VueRouter({
