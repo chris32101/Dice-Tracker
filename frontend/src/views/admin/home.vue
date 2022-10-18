@@ -1,5 +1,5 @@
 <template>
     <div class="admin-home">
-        <h1>Dashboard League Home Page</h1>
+        <h1>Admin Homepage</h1>
     </div>
 </template>
