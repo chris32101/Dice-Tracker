@@ -156,3 +156,21 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+
+
+ACCOUNT_EMAIL_CONFIRMATION = "none"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATED_METHOD = "username_email"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# drf-yasg
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
