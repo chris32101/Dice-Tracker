@@ -56,3 +56,22 @@ class GenerateUserStats(APIView):
             else:
                 return Response(data={"response": True, "error": "This user does not exist"})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Creating a league object based off passed in JSON key information
+class LeagueCreate(APIView):
+    def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = LeagueCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            #check if league has already been started
+            if (len(League.objects.filter(ownerUsername=str(request.data['ownerUsername']))) >= 1):
+                return Response(data={"response": False, "error": "User already started a league"})
+            #Checks to see if a unique league name was used
+            elif (len(League.objects.filter(leagueName=str(request.data['leagueName']))) >= 1):
+                return Response(data={"response": False, "error": "League name has been used previously"})
+            #creates league
+            else:
+                league = League(ownerUsername=str(request.data['ownerUsername']), leagueName=str(request.data['leagueName']), started=0, teamLength=int(request.data['teamLength']))
+                league.save()
+                return Response(data={"response": True, "error": "Created league for user", "leagueName": str(request.data['leagueName'])})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
