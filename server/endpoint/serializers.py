@@ -62,3 +62,68 @@ class SubmitLeagueSerializer(serializers.ModelSerializer):
             "leagueName",
             "ownerUsername"
         ]
+
+class DeleteLeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "username"
+        ]
+
+class addTeamToLeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = [
+            "name",
+        ]
+
+class LeagueGetTeamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = League
+        fields = ["leagueName"]
+        # extra_kwargs = {
+        #     "ownerUsername": {"required": True}   
+        # }
+
+# class enterStatsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Team
+#         fields = [
+#             "team",
+#             "player",
+#             "shot",
+#             "tableHit",
+#             "point",
+#             "clink",
+#             "dunk",
+#             "catcher",
+#         ]
+
+class challongeDataSaverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = League
+        fields = ["leagueName"]
+        extra_kwargs = {
+            "challongeID": {"required": True},
+            "challongeURL": {"required": True}
+        }
+
+class matchIDSaverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = League
+        fields = ["leagueName"]
+        extra_kwargs = {
+            "matchIDs": {"required": True},
+        }
+
+class getMatchDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = League
+        fields = ["leagueName"]
+        extra_kwargs = {
+            "matchIDs": {"required": True},
+        }
+class getGameDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = ["gameID"]
