@@ -2,7 +2,7 @@
   <v-app>
       <div id="app">
           <v-app-bar dense dark>
-          <router-link to="/" tag="div" class="v-toolbar__title">Snappa</router-link>
+          <router-link to="/" tag="div" class="v-toolbar__title">Dice Tracker</router-link>
           <v-spacer></v-spacer>
           <div id="loggedIn" v-if="sessionKey !== 'NONE'">  
               <v-menu open-on-hover offset-y>
