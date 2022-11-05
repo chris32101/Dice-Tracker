@@ -33,8 +33,18 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+<<<<<<< HEAD
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
+=======
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls')),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+>>>>>>> 35b97d12b3c42c7c2b56a986ba33d1c3cd93859b
 ]
