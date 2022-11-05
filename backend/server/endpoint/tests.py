@@ -30,6 +30,12 @@ class UserTestCase(TestCase):
 
         League.objects.create(ownerUsername="ChrisNg", leagueName="AmazingLeague", teamLength=10, started=0)
 
+    def test_user_object1(self):
+        self.assertIsNotNone(User.objects.get(username = "ChrisNg"))
+        
+    def test_user_object2(self):
+        self.assertIsNotNone(User.objects.get(username = "Nishi"))
+    
     def test_four_users(self):
         self.assertEqual(len(User.objects.all()), 4)
 
