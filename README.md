@@ -30,3 +30,13 @@ N/A
 6. Run `npm install` to install all packages found in `package.json`.
 7. Finally, run `npm run dev`
 8. You should see something similar to [this](https://prnt.sc/1vmlcou), visit the local link on your preferred browser
+
+### Backend
+1. Install the latest version of [Python](https://www.python.org/downloads/)
+2. Type `python` (or `python3`) in a terminal of your choice (ie: command prompt)
+3. `cd` to `/server/`
+4. Run `pip install -r requirements.txt`
+5. Run `python manage.py makemigrations` (if python doesn't exist, try `python3`)
+6. Run `python manage.py migrate` (if python doesn't exist, try `python3`)
+7. Run `python manage.py migrate --run-syncdb` (if python doesn't exist, try `python3`)
+8. Run `python manage.py runserver` (if python doesn't exist, try `python3`)
