@@ -100,6 +100,8 @@ class addTeamToLeague(APIView):
 # Get all active teams (all teams that have joined the league)
 class GetActiveTeamsInLeague(APIView):
     def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = LeagueGetTeamsSerializer(data=request.data)
         if serializer.is_valid():
             #checks for valid league name
             if (len(League.objects.filter(leagueName=request.data['leagueName'])) == 0):
@@ -107,13 +109,16 @@ class GetActiveTeamsInLeague(APIView):
             else:
                 #returns all teams of the league
                 teamsInLeague = []
-                teamsInLeague = League.objects.get(leagueName=request.data['leagueName']).allTeams.all()
-                teamsInLeague.values() -> <QuerySet [{'id': 1, 'name': 'TEAMONE', 'user1_id': UUID('4b7235cf-12da-49b0-8b75-497b47b66116'), 'user2_id': UUID('8d4e9ec9-484f-455e-998d-8112c5248b73')}]>
+                #teamsInLeague = League.objects.get(leagueName=request.data['leagueName']).allTeams.all()
+                #teamsInLeague.values() -> <QuerySet [{'id': 1, 'name': 'TEAMONE', 'user1_id': UUID('4b7235cf-12da-49b0-8b75-497b47b66116'), 'user2_id': UUID('8d4e9ec9-484f-455e-998d-8112c5248b73')}]>
+                for x in League.objects.get(leagueName=request.data['leagueName']).allTeams.all():
+                    teamsInLeague.append([x.id,x.name, x.user1_id, x.user2_id])
                 
                 currLeague = League.objects.get(leagueName=request.data['leagueName'])
                 challongeID = currLeague.challongeID
                 challongeURL = currLeague.challongeURL
                 leagueOwnerUsername = currLeague.ownerUsername
                 
+                print(teamsInLeague)
                 return Response(data={"response": True, "leagueOwnerUsername": leagueOwnerUsername, "leagueTeams": teamsInLeague, "challongeID": challongeID, "challongeURL": challongeURL})    
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
