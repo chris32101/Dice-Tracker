@@ -76,6 +76,7 @@ class LeagueCreate(APIView):
                 return Response(data={"response": True, "error": "Created league for user", "leagueName": str(request.data['leagueName'])})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Create a team and add to league
 class addTeamToLeague(APIView):
     def post(self, request, format=None):
         serializer = addTeamToLeagueSerializer(data=request.data)
@@ -94,4 +95,25 @@ class addTeamToLeague(APIView):
             league.allTeams.add(currentTeam)
             #print(league.allTeams.all())
             return Response(data={"response": True, "error": "Successfully added the team"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Get all active teams (all teams that have joined the league)
+class GetActiveTeamsInLeague(APIView):
+    def post(self, request, format=None):
+        if serializer.is_valid():
+            #checks for valid league name
+            if (len(League.objects.filter(leagueName=request.data['leagueName'])) == 0):
+                return Response(data={"response": False, "error": "The data for the requested league doesn't exist"})
+            else:
+                #returns all teams of the league
+                teamsInLeague = []
+                teamsInLeague = League.objects.get(leagueName=request.data['leagueName']).allTeams.all()
+                teamsInLeague.values() -> <QuerySet [{'id': 1, 'name': 'TEAMONE', 'user1_id': UUID('4b7235cf-12da-49b0-8b75-497b47b66116'), 'user2_id': UUID('8d4e9ec9-484f-455e-998d-8112c5248b73')}]>
+                
+                currLeague = League.objects.get(leagueName=request.data['leagueName'])
+                challongeID = currLeague.challongeID
+                challongeURL = currLeague.challongeURL
+                leagueOwnerUsername = currLeague.ownerUsername
+                
+                return Response(data={"response": True, "leagueOwnerUsername": leagueOwnerUsername, "leagueTeams": teamsInLeague, "challongeID": challongeID, "challongeURL": challongeURL})    
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
