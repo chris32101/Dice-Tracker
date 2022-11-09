@@ -75,3 +75,20 @@ class LeagueCreate(APIView):
                 league.save()
                 return Response(data={"response": True, "error": "Created league for user", "leagueName": str(request.data['leagueName'])})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class addTeamToLeague(APIView):
+    def post(self, request, format=None):
+        serializer = addTeamToLeagueSerializer(data=request.data)
+        if serializer.is_valid():
+            if (len(League.objects.filter(ownerUsername=request.data['ownerUsername'])) == 0):
+                return Response(data={"response": False, "error": "This league doesn't exist"})
+            if (len(Team.objects.filter(name=request.data['name'])) != 0):
+                return Response(data={"response": False, "error": "This team name is taken"})
+            gameScoreboard = GameScoreboard(totalPoints=0)
+            currentTeam = Team(name = str(request.data['name']), user1 = User.objects.get(username=str(request.data['user1'])), user2 = User.objects.get(username=str(request.data['user2'])))
+            currentTeam.team1Scoreboard.add(gameScoreboard)
+            league = League.objects.get(ownerUsername=request.data['ownerUsername'])    
+            league.allTeams.add(currentTeam)
+            print(league.allTeams.all())
+            return Response(data={"response": True, "error": "Successfully added the team"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
