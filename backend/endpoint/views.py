@@ -122,3 +122,58 @@ class GetActiveTeamsInLeague(APIView):
                 print(teamsInLeague)
                 return Response(data={"response": True, "leagueOwnerUsername": leagueOwnerUsername, "leagueTeams": teamsInLeague, "challongeID": challongeID, "challongeURL": challongeURL})    
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# Checks if league exists
+class DoesLeagueExist(APIView):
+    def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = DoesLeagueExistSerializer(data=request.data)
+        if serializer.is_valid():
+            #checks if the user is a league owner
+            if (len(League.objects.filter(ownerUsername=request.data['username'])) == 0):
+                return Response(data={"response": False, "error": "User doesn't own any leagues"})
+            #checks how many teams are in the league and returns the league name and the number of teams
+            allTeams = []
+            for x in League.objects.get(ownerUsername=request.data['username']).allTeams.all():
+                allTeams.append(x)
+            if (len(allTeams) == 0):
+                lengthTeams = 0
+            else:
+                lengthTeams = 1
+            return Response(data={"response": True, "error": "User owns a leagues", "leagueName": League.objects.get(ownerUsername=request.data['username']).leagueName, "startedStatus": int(League.objects.get(ownerUsername=request.data['username']).started), "lengthTeams": lengthTeams})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Add a user to a league
+class LeagueAddUser(APIView):
+    def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = LeagueAddUserSerializer(data=request.data)
+        if serializer.is_valid():
+            #checks for invalid username
+            if (len(League.objects.filter(ownerUsername=request.data['ownerUsername'])) == 0):
+                return Response(data={"response": False, "error": "League owner username is invalid"})
+            else:
+                #adds user to the league league
+                currentLeague = League.objects.get(ownerUsername=request.data['ownerUsername'])
+                newUser = User.objects.get(username=request.data['username'])
+                # we're just going to assume user wasn't added previously
+                currentLeague.allUsers.add(newUser)
+                currentLeague.save()
+                return Response(data={"response": True, "error": "Added user to league object", "leagueName": currentLeague.leagueName})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# Get all active league users (all users that have joined the league)
+class GetActiveLeagueUsers(APIView):
+    def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = LeagueGetActiveUsersSerializer(data=request.data)
+        if serializer.is_valid():
+            #checks for valid league name
+            if (len(League.objects.filter(leagueName=request.data['leagueName'])) == 0):
+                return Response(data={"response": False, "error": "The data for the requested league doesn't exist"})
+            else:
+                #returns all users of the league
+                allUsers = []
+                for x in League.objects.get(leagueName=request.data['leagueName']).allUsers.all():
+                    allUsers.append(x.username)
+                return Response(data={"response": True, "error": allUsers, "leagueOwner": League.objects.get(leagueName=request.data['leagueName']).ownerUsername, "startedStatus": League.objects.get(leagueName=request.data['leagueName']).started, "teamLength": int(League.objects.get(leagueName=request.data['leagueName']).teamLength)})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
