@@ -142,6 +142,26 @@ class DoesLeagueExist(APIView):
             return Response(data={"response": True, "error": "User owns a leagues", "leagueName": League.objects.get(ownerUsername=request.data['username']).leagueName, "startedStatus": int(League.objects.get(ownerUsername=request.data['username']).started), "lengthTeams": lengthTeams})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Activates a league
+class SubmitLeague(APIView):
+    def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = SubmitLeagueSerializer(data=request.data)
+        if serializer.is_valid():
+            #checks for user initialization of league
+            if (len(League.objects.filter(ownerUsername=request.data['username'])) == 0):
+                return Response(data={"response": False, "error": "User has not initialized a league yet"})
+            #checks if user is the league owner
+            elif (League.objects.get(leagueName=request.data['leagueName']).ownerUsername != request.data['username']):
+                return Response(data={"response": False, "error": "You are not owner of this league"})
+            #makes sure that league is not already in play
+            elif (League.objects.get(ownerUsername=request.data['username']).started == 1):
+                return Response(data={"response": False, "error": "League has already been started"})
+            #starts the league 
+            currentLeague = League.objects.get(ownerUsername=request.data['username'])
+            currentLeague.started = 1
+            currentLeague.save()
+            return Response(data={"response": True, "error": "Started league"})
 # Add a user to a league
 class LeagueAddUser(APIView):
     def post(self, request, format=None):
