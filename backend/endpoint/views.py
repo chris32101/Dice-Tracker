@@ -215,3 +215,12 @@ class getMatchData(APIView):
                 currentLeague.save()
             return Response(data={"response": True})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class getGameDataForStatTracker(APIView):
+    def post(self, request, format=None):
+        serializer = getGameDataSerializer(data=request.data)
+        if serializer.is_valid():
+            tempGameID = request.data['gameID']
+            currGame = Game.objects.get(gameID=tempGameID)
+            return Response(data={"response": True, "gameID": request.data['gameID'], "team1_name": currGame.team1.name, "team1_user1": currGame.team1.user1.username, "team1_user2": currGame.team1.user2.username, "team2_name": currGame.team2.name, "team2_user1": currGame.team2.user1.username, "team2_user2": currGame.team2.user2.username})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
