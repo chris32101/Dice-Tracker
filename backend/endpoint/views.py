@@ -122,6 +122,18 @@ class GetActiveTeamsInLeague(APIView):
                 print(teamsInLeague)
                 return Response(data={"response": True, "leagueOwnerUsername": leagueOwnerUsername, "leagueTeams": teamsInLeague, "challongeID": challongeID, "challongeURL": challongeURL})    
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Deletes a league
+class DeleteLeague(APIView):
+    def post(self, request, format=None):
+        # serializer checks if the passed in data (json object) meets the desired requirements
+        serializer = DeleteLeagueSerializer(data=request.data)
+        if serializer.is_valid():
+            #Deletes the league
+            League.objects.filter(ownerUsername=request.data['username']).delete()
+            return Response(data={"response": True, "error": "Deleted league owned by user"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # Checks if league exists
 class DoesLeagueExist(APIView):
     def post(self, request, format=None):
