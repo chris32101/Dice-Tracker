@@ -129,6 +129,9 @@ class DeleteLeague(APIView):
         # serializer checks if the passed in data (json object) meets the desired requirements
         serializer = DeleteLeagueSerializer(data=request.data)
         if serializer.is_valid():
+            #checks to see if user owns the league
+            if (len(League.objects.filter(ownerUsername=request.data['username'])) == 0):
+                return Response(data={"response": False, "error": "User doesn't own any leagues"})
             #Deletes the league
             League.objects.filter(ownerUsername=request.data['username']).delete()
             return Response(data={"response": True, "error": "Deleted league owned by user"})
