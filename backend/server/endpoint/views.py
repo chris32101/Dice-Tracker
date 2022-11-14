@@ -48,3 +48,21 @@ class saveChallongeData(APIView):
             currentLeague.save()
             return Response(data={"response": True})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class saveMatchIDs(APIView):
+    def post(self, request, format=None):
+        serializer = matchIDSaverSerializer(data=request.data)
+        if serializer.is_valid():
+            currentLeague = League.objects.get(leagueName=request.data['leagueName'])
+            matchIDs = request.data['matchIDs']
+            teamObjects = []
+            print(matchIDs)
+            for y in currentLeague.allTeams.all():
+                teamObjects.append(y)
+            for x in matchIDs:
+                newGame = Game(gameID=int(x), team1=teamObjects[0], team2=teamObjects[1], winnerTeam="N/A")
+                newGame.save()
+                currentLeague.allGames.add(newGame)
+                currentLeague.save()
+            return Response(data={"response": True})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
