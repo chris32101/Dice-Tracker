@@ -116,6 +116,8 @@ class GetActiveTeamsInLeague(APIView):
                 
                 currLeague = League.objects.get(leagueName=request.data['leagueName'])
                 challongeID = currLeague.challongeID
+                # utilized in microservice
+                challongeAPIRouteKEY = "MFeyUpqsBb%BY.U"
                 challongeURL = currLeague.challongeURL
                 leagueOwnerUsername = currLeague.ownerUsername
                 
@@ -137,32 +139,33 @@ class DeleteLeague(APIView):
             return Response(data={"response": True, "error": "Deleted league owned by user"})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class enterStats(APIView):
-#     def post(self, request, format=None):
-#         serializer = enterStatsSerializer(data=request.data)
-#         if serializer.is_valid():
-#             if (len(Team.objects.filter(name = request.data['team'])) == 0):
-#                 return Response(data={"response": False})
+# code now works, there were issues with our backend system
+class enterStats(APIView):
+    def post(self, request, format=None):
+        serializer = enterStatsSerializer(data=request.data)
+        if serializer.is_valid():
+            if (len(Team.objects.filter(name = request.data['team'])) == 0):
+                return Response(data={"response": False})
 
-#             tmpTeam = Team.objects.get(name = request.data['team'])
-#             if (tmpTeam.user1 == request.data['player']): 
-#                 tmpTeam.user1.stat2 += request.data['shot']
-#                 tmpTeam.user1.stat3 += request.data['tablehit']
-#                 tmpTeam.user1.stat4 += request.data['point']
-#                 tmpTeam.user1.stat5 += request.data['clink']
-#                 tmpTeam.user1.stat6 += request.data['dunk']
+            tmpTeam = Team.objects.get(name = request.data['team'])
+            if (tmpTeam.user1 == request.data['player']): 
+                tmpTeam.user1.stat2 += request.data['shot']
+                tmpTeam.user1.stat3 += request.data['tablehit']
+                tmpTeam.user1.stat4 += request.data['point']
+                tmpTeam.user1.stat5 += request.data['clink']
+                tmpTeam.user1.stat6 += request.data['dunk']
 
-#             else:
-#                 tmpTeam.user2.stat2 += request.data['shot']
-#                 tmpTeam.user2.stat3 += request.data['tablehit']
-#                 tmpTeam.user2.stat4 += request.data['point']
-#                 tmpTeam.user2.stat5 += request.data['clink']
-#                 tmpTeam.user2.stat6 += request.data['dunk']
+            else:
+                tmpTeam.user2.stat2 += request.data['shot']
+                tmpTeam.user2.stat3 += request.data['tablehit']
+                tmpTeam.user2.stat4 += request.data['point']
+                tmpTeam.user2.stat5 += request.data['clink']
+                tmpTeam.user2.stat6 += request.data['dunk']
             
-#             tmpTeam.team1Scoreboard += request.data['point']
+            tmpTeam.team1Scoreboard += request.data['point']
 
-#             return Response(data={"response": True})
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"response": True})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Checks if league exists
 class DoesLeagueExist(APIView):
@@ -251,6 +254,7 @@ class getMatchData(APIView):
             for y in currentLeague.allTeams.all():
                 teamObjects.append(y)
             for x in matchIDs:
+                # saves game object to be utilized in external microservice /api/gameSave
                 newGame = Game(gameID=int(x), team1=teamObjects[0], team2=teamObjects[1], winnerTeam="N/A")
                 newGame.save()
                 currentLeague.allGames.add(newGame)

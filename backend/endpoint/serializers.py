@@ -10,7 +10,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [ 
             "username",
-            "email"
+            "email",
+            "url",
+            "route"
         ]
 
 class StatSerializer(serializers.ModelSerializer):
@@ -36,7 +38,9 @@ class LeagueAddUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "username"
+            "username",
+            "userID",
+            "userToken"
         ]
         # extra key that *could* be useful
         extra_kwargs = {
@@ -75,6 +79,7 @@ class addTeamToLeagueSerializer(serializers.ModelSerializer):
         model = Team
         fields = [
             "name",
+            "features": [True, True, False, False]
         ]
 
 class LeagueGetTeamsSerializer(serializers.ModelSerializer):
@@ -121,9 +126,9 @@ class getMatchDataSerializer(serializers.ModelSerializer):
         model = League
         fields = ["leagueName"]
         extra_kwargs = {
-            "matchIDs": {"required": True},
+            "matchIDs": {"required": False},
         }
 class getGameDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ["gameID"]
+        fields = ["gameID", "tokenID"]
